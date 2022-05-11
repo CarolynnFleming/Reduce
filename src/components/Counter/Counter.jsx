@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useReducer, createContext  } from 'react';
 import styles from './Counter.css';
 
 const colors = {
@@ -6,9 +6,9 @@ const colors = {
   green: 'rgb(52, 211, 153)',
   red: 'rgb(239, 68, 68)',
 };
-let state = {
+let startState = {
   count:0,
-  color: color.yellow
+  color: colors.yellow
 }
 export default function Counter() {
 const countContext = createContext(null);
@@ -16,38 +16,39 @@ const countContext = createContext(null);
 const reducer = (state, action) => {
   const colorSwitch = (count) => {
     if (count === 0) {
-      return(color.yellow);
-    } if (count > 0) {
+      return(colors.yellow);
+    } else if (count > 0) {
       return(colors.green);
-    } if (count < 0) {
+    } else {
       return(colors.red);
     }
   }
  switch (action.type) {
-   case 'increase':
+   case 'increment':
    return{
      count: state.count + 1,
      color: colorSwitch(state.count + 1),
    };
-   case 'decrease':
+   case 'decrement':
      return {
        count: state.count - 1,
        color: colorSwitch(state.count - 1),
      };
      case 'reset':
-       return { count: 0, color: color.yellow };
+       return { count: 0, color: colors.yellow };
        default: 
        throw new Error('Unhandled Action Type');
  }
 };
 
+const [state, dispatch] = useReducer(reducer, startState);
   return (
     <main className={styles.main}>
-      <h1 style={{ color: currentColor }}>{count}</h1>
+      <h1 style={{ color: state.color }}>{state.count}</h1>
       <div>
         <button
           type="button"
-          onClick={increment}
+          onClick={() => dispatch({ type: 'increment'})}
           aria-label="increment"
           style={{ backgroundColor: colors.green }}
         >
@@ -55,7 +56,7 @@ const reducer = (state, action) => {
         </button>
         <button
           type="button"
-          onClick={decrement}
+          onClick={() => dispatch({ type: 'decrement'})}
           aria-label="decrement"
           style={{ backgroundColor: colors.red }}
         >
@@ -64,7 +65,7 @@ const reducer = (state, action) => {
         <button
           type="button"
           aria-label="reset"
-          onClick={reset}
+          onClick={() => dispatch({ type: 'reset'})}
           style={{ backgroundColor: colors.yellow }}
         >
           Reset
