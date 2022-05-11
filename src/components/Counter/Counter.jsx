@@ -6,10 +6,12 @@ const colors = {
   green: 'rgb(52, 211, 153)',
   red: 'rgb(239, 68, 68)',
 };
-
+let state = {
+  count:0,
+  color: color.yellow
+}
 export default function Counter() {
-  const [count, setCount] = useState(0);
-  const [currentColor, setCurrentColor] = useState(colors.yellow);
+
 
   useEffect(() => {
     if (count === 0) {
