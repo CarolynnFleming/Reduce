@@ -11,33 +11,35 @@ let state = {
   color: color.yellow
 }
 export default function Counter() {
+const countContext = createContext(null);
 
-
-  useEffect(() => {
+const reducer = (state, action) => {
+  const colorSwitch = (count) => {
     if (count === 0) {
-      setCurrentColor(colors.yellow);
+      return(color.yellow);
+    } if (count > 0) {
+      return(colors.green);
+    } if (count < 0) {
+      return(colors.red);
     }
-
-    if (count > 0) {
-      setCurrentColor(colors.green);
-    }
-
-    if (count < 0) {
-      setCurrentColor(colors.red);
-    }
-  }, [count]);
-
-  const increment = () => {
-    setCount((prevState) => prevState + 1);
-  };
-
-  const decrement = () => {
-    setCount((prevState) => prevState - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
+  }
+ switch (action.type) {
+   case 'increase':
+   return{
+     count: state.count + 1,
+     color: colorSwitch(state.count + 1),
+   };
+   case 'decrease':
+     return {
+       count: state.count - 1,
+       color: colorSwitch(state.count - 1),
+     };
+     case 'reset':
+       return { count: 0, color: color.yellow };
+       default: 
+       throw new Error('Unhandled Action Type');
+ }
+};
 
   return (
     <main className={styles.main}>
